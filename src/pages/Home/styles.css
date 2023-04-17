@@ -1,0 +1,53 @@
+.main {
+    height: calc(100% - 250px);
+    overflow: auto;
+    color: white;
+    padding: 15px;
+}
+
+.divMessage {
+    padding: 20px;
+    margin-bottom: 10px;
+    border-radius: 25px;
+    background-color: #444654;
+}
+
+.pMessage {
+    font-size: 16px;
+    line-height: 23px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 150px;
+    border-top: 1px solid white;
+    background-color: #343541;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: rgb(252, 54, 54);
+}
+
+.audioRecording {
+    background-color: #854700 !important;
+}
+
+.audioRecorder {
+    height: 75px;
+    width: 75px;
+    border-radius: 50px;
+    display: flex;
+    background-color: #ff8800;
+    align-items: center;
+    justify-content: center;
+    border-width: 0;
+    box-shadow: 0px 0px 15px #000;
+}
+
+.micImage {
+    height: 45px;
+    width: 45px;
+}
