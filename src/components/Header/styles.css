@@ -1,8 +1,81 @@
 
 .header {
-    width: 100%;
+    width: 86%;
     height: 50px;
     background-color: #343541;
     color: white;
     border-bottom: .5px solid white;
+    padding: 0 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fixedHeader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fakeMenu {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 9;
+    opacity: .7;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    background-color: #565869;
+}
+
+.menu {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
+    width: 75vw;
+    height: 100vh;
+    position: absolute;
+    background-color: #202123;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0px 0px 15px #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.closeMenu {
+    top: 25px;
+    right: -35px;
+    position: absolute;
+}
+
+.btNewNote {
+    width: 70vw;
+    height: 50px;
+    margin: 15px 0;
+    color: white;
+    font-size: 18px;
+    border-radius: 10px;
+    border: 1px solid white;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+}
+
+.menuPlusNote {
+    margin: 0 15px;
+}
+
+.divConversation {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 64px;
+}
+
+.chatIcon {
+    margin-right: 16px;
 }

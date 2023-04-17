@@ -1,27 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SpeechRecognition, {useSpeechRecognition} from "react-speech-recognition";
 import {SpeechRecognitionText} from "../../components/Speech";
+import { useLocation } from "react-router-dom";
 import Header from "../../components/Header";
 import mic from "../../assets/mic.png"
 import "./styles.css"
 
 const Home = () => {
     const [isRecording, setIsRecording] = useState(false);
-
+    const [actualConversation, setActualConversation] = useState("New");
+    const location = useLocation();
+    let msgId = location.state?.id || "";
     const [messages, setMessages] = useState([
         {
             id: 1,
             message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-            category: "Lorem"
         },
         {
             id: 2,
             message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-            category: "Lorem"
         },
         {
             id: 3,
             message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        }
+    ])
+    const [conversations, setConversations] = useState([
+        {
+            id: 1,
+            messagesId: [1],
+            name: "Conversa Title",
+            category: "Lorem"
+        },
+        {
+            id: 2,
+            messagesId: [2],
+            name: "Conversa Title",
+            category: "Lorem"
+        },
+        {
+            id: 3,
+            messagesId: [3],
+            name: "Conversa Title",
             category: "Lorem"
         }
     ])
@@ -80,6 +100,10 @@ const Home = () => {
         }
     }
 
+    const updateActualConversation = conversation => {
+        setActualConversation(conversation);
+    }
+
     const Footer = () => {
         return (
             <div className="footer">
@@ -96,9 +120,8 @@ const Home = () => {
 
     return (
         <>
-            <Header />
+            <Header title={actualConversation.name || "New note"} conversations={conversations} handleActualConversation={updateActualConversation} />
             <div className="main">
-                <p>TESTE PORRA</p>
                 {
                     messages.map((message) => {
                         return (
