@@ -15,9 +15,10 @@ const Login = () => {
             email: email,
             password: password
         }).then((result) => {
-            sessionStorage.setItem("TOKEN", result.data.token);
-            sessionStorage.setItem("loggedUserId", result.data.userId);
-            sessionStorage.setItem("loggedFirstName", result.data.firstName);
+            localStorage.setItem("TOKEN", result.data.token);
+            localStorage.setItem("loggedUserId", result.data.userId);
+            localStorage.setItem("loggedFirstName", result.data.firstName);
+            api.defaults.headers.common['authorization'] = `Bearer ${result.data.token}`;
             navigate("/home");
             console.log(result)
         }).catch(err => console.error(err))

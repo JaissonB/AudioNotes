@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from "react";
 import SpeechRecognition, {useSpeechRecognition} from "react-speech-recognition";
-import {SpeechRecognitionText} from "../../components/Speech";
-import { useLocation } from "react-router-dom";
+import { redirect, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import mic from "../../assets/mic.png"
 import "./styles.css"
+import api from "../../services/api";
 
 const Home = () => {
+    const navigate = useNavigate();
     const [isRecording, setIsRecording] = useState(false);
     const [actualConversation, setActualConversation] = useState("New");
+    const [firstName, _] = useState(localStorage.getItem("loggedFirstName"));
     const location = useLocation();
     let msgId = location.state?.id || "";
     const [messages, setMessages] = useState([
-        {
-            id: 1,
-            message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-            id: 2,
-            message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-            id: 3,
-            message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        }
+        // {
+        //     id: 1,
+        //     message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        // },
+        // {
+        //     id: 2,
+        //     message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        // },
+        // {
+        //     id: 3,
+        //     message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        // }
     ])
     const [conversations, setConversations] = useState([
         {
@@ -54,20 +57,44 @@ const Home = () => {
             },
         },
         {
-            command: 'Autes, pesquisar sobre * no Google.',
-            callback: (site) => {
-                window.open(`https://www.google.com/search?q=${site}`)
+            command: 'Gertrudes para.',
+            callback: () => {
+                whenStopListening();
             },
         },
-        // {
-        //     command: 'Lisa, cor *.',
-        //     callback: (cor) => {
-        //         document.body.style.background = cor;
-        //         if(cor === 'Black') document.getElementById('h1-text').style.color = 'white'
-        //         else document.getElementById('h1-text').style.color = 'black'
-        //     }
-        // }
+        {
+            command: 'gertrudes para.',
+            callback: () => {
+                whenStopListening();
+            },
+        },
+        {
+            command: 'gertrudes para',
+            callback: () => {
+                whenStopListening();
+            },
+        },
+        {
+            command: 'Gertrudes, Pará.',
+            callback: () => {
+                whenStopListening();
+            },
+        },
     ]
+
+    useEffect(() => {
+        if (localStorage.getItem("TOKEN")) {
+            let header = {'authorization': `Bearer ${localStorage.getItem("TOKEN")}`}
+            async function getChats() {
+                await api.get("/conversations", {headers: header})
+                .then(result => console.log(result))
+                .catch(error => console.error(error));
+            }
+            getChats();
+        } else {
+            navigate("/");
+        }
+    }, [])
 
     const {
         transcript, 
@@ -95,6 +122,7 @@ const Home = () => {
         if (isRecording) {
             whenStopListening();
         } else {
+            resetTranscript();
             SpeechRecognition.startListening({continuous: true, language: 'pt-BR'});
             setIsRecording(!isRecording);
         }
@@ -123,6 +151,7 @@ const Home = () => {
             <Header title={actualConversation.name || "Nova ideia"} conversations={conversations} handleActualConversation={updateActualConversation} />
             <div className="main">
                 {
+                    messages?.length || isRecording ?
                     messages.map((message) => {
                         return (
                             <div className="divMessage" key={message.id}>
@@ -130,9 +159,15 @@ const Home = () => {
                             </div>
                         )
                     })
+                    :
+                    <div className="emptyMessages">
+                        <h3>Bem vindo(a), {firstName}!</h3>
+                        <p>Clique no botão abaixo para começar a guardar suas ideias.</p>
+                        <p>Diga "Gertrudes, para." para parar a gravação ou clique novamente no botão.</p>
+                    </div>
                 }
                 {
-                    transcript &&
+                    transcript && isRecording &&
                     <div className="divMessage">
                         <p className="pMessage">{transcript}</p>
                     </div>

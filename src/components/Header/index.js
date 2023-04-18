@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlinePlus, AiOutlineClose, AiOutlineMessage, AiOutlineUser, AiOutlineSend, AiOutlineLogout } from "react-icons/ai";
 import "./styles.css";
+import api from "../../services/api";
 
 const Header = ({ title, conversations, handleActualConversation }) => {
     const [showMenu, setShowMenu] = useState(false);
@@ -10,6 +11,23 @@ const Header = ({ title, conversations, handleActualConversation }) => {
     useEffect(()=>{
         // console.log(title)
     }, [])
+
+    const logout = () => {
+        localStorage.removeItem("TOKEN");
+        localStorage.removeItem("loggedUserId");
+        localStorage.removeItem("loggedFirstName");
+        navigate("/");
+    }
+    //cell do Igor 5554996711882
+    const sendMessage = async () => {
+        await api.post("https://api.z-api.io/instances/3BBFCD789DFF30614E687296C04D749E/token/6093744DB0A96F2A1E7E2309/send-messages",
+            {
+                phone: "5554992026787",
+                message: "Isso é um teste seu manézão, temos 2 dias grátis, depois, lembrar de desativar, obrigado! Por favor avise o Jaisson se funcionar."
+            }
+        ).then(result => console.log(result))
+        .catch(error => console.error(error))
+    }
 
     return (
         <div className="header">
@@ -34,23 +52,30 @@ const Header = ({ title, conversations, handleActualConversation }) => {
                             <AiOutlinePlus className="menuPlusNote" />
                             <p>Nova ideia</p>
                         </button>
-                        {
-                            conversations?.map((conversation) => {
-                                return (
-                                    <div
-                                        className="divConversation"
-                                        key={conversation.id}
-                                        onClick={() => {
-                                            handleActualConversation(conversation);
-                                            setShowMenu(false);
-                                        }}
-                                    >
-                                        <AiOutlineMessage size={20} className="icon" />
-                                        <p>{conversation.name}</p>
-                                    </div>
-                                )
-                            })
-                        }
+                        <div className="containerConversations">
+                            {
+                                conversations?.map((conversation) => {
+                                    return (
+                                        <div
+                                            className="divConversation"
+                                            key={conversation.id}
+                                        >
+                                            <div
+                                                className="divConversationFirst"
+                                                onClick={() => {
+                                                    handleActualConversation(conversation);
+                                                    setShowMenu(false);
+                                                }}
+                                            >
+                                                <AiOutlineMessage size={20} className="icon" />
+                                                <p>{conversation.name}</p>
+                                            </div>
+                                            <AiOutlineSend size={20} className="icon iconSend" onClick={() => console.log("SEND this")} />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
                         <div className="menuFooter">
                             <div
                                 className="optionMenuFooter"
@@ -59,20 +84,16 @@ const Header = ({ title, conversations, handleActualConversation }) => {
                                 <AiOutlineUser size={20} className="icon" />
                                 <p>Account</p>
                             </div>
-                            <div
+                            {/* <div
                                 className="optionMenuFooter"
-                                onClick={() => {
-                                    setShowMenu(false);
-                                }}
+                                onClick={sendMessage}
                             >
                                 <AiOutlineSend size={20} className="icon iconSend" />
                                 <p>Send on Whatsapp</p>
-                            </div>
+                            </div> */}
                             <div
                                 className="optionMenuFooter"
-                                onClick={() => {
-                                    setShowMenu(false);
-                                }}
+                                onClick={logout}
                             >
                                 <AiOutlineLogout size={20} className="icon" />
                                 <p>Logout</p>

@@ -69,11 +69,25 @@
     margin: 0 15px;
 }
 
-.divConversation {
+.containerConversations {
     width: 100%;
+}
+
+.divConversation {
+    width: calc(100% - 32px);
     display: flex;
     align-items: center;
-    padding-left: 64px;
+    padding-left: 32px;
+}
+
+.divConversation:hover {
+    background-color: #343541;
+}
+
+.divConversationFirst {
+    display: flex;
+    width: 100%;
+    align-items: center;
 }
 
 .icon {
@@ -98,5 +112,11 @@
 }
 
 .iconSend {
+    margin-left: auto;
+    padding: 5px;
     transform: rotate(-45deg);
+}
+
+.iconSend:hover {
+    color: greenyellow;
 }
