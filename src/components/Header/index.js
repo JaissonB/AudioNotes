@@ -9,23 +9,16 @@ const Header = ({ title, conversations, handleActualConversation }) => {
     const header = {authorization: `Bearer ${localStorage.getItem("TOKEN")}`}
     const navigate = useNavigate();
 
-    useEffect(()=>{
-        // console.log(title)
-    }, [])
-
     const logout = () => {
         localStorage.removeItem("TOKEN");
         localStorage.removeItem("loggedUserId");
         localStorage.removeItem("loggedFirstName");
         navigate("/");
     }
-    //cell do Igor 5554996711882
-
+    
     const sendConversationToWhatsapp = async (data) => {
         await api.get(`/conversations/${data.conversation_id}`, { headers: header })
         .then(result => {
-            console.log(result.data);
-            
             result.data.messages.forEach(message => {
                 sendMessage(message);
             });
@@ -38,7 +31,7 @@ const Header = ({ title, conversations, handleActualConversation }) => {
                 phone: "5554992026787",
                 message: message.content
             }
-        ).then(result => console.log(result))
+        ).then(result => result.json())
         .catch(error => console.error(error))
     }
 
@@ -81,7 +74,8 @@ const Header = ({ title, conversations, handleActualConversation }) => {
                                                 }}
                                             >
                                                 <AiOutlineMessage size={20} className="icon" />
-                                                <p>{conversation.conversation_name}</p>
+                                                <div className="titleConversation">{`${conversation.conversation_name}`}</div>
+                                                <p>{` - ${conversation.category_name}`}</p>
                                             </div>
                                             <AiOutlineSend size={20} className="icon iconSend" onClick={() => sendConversationToWhatsapp(conversation)} />
                                         </div>

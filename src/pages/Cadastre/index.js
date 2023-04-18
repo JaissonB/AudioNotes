@@ -13,27 +13,51 @@ const Cadastre = () => {
     const [lastName, setLastName] = useState("");
     const [phone, setPhone] = useState("");
     const userLogged = !!localStorage.getItem("TOKEN");
+    const header = {authorization: `Bearer ${localStorage.getItem("TOKEN")}`}
     const navigate = useNavigate();
+
+    const getUserData = async () => {
+        let userData;
+        await api.get("/users", {headers: header})
+        .then(result => {
+            userData = result.data;
+            setFirstName(userData.firstName);
+            setLastName(userData.lastName);
+            setEmail(userData.email);
+            setPassword(userData.password);
+            setPhone(userData.phone);
+        })
+    }
 
     useEffect(() => {
         if (userLogged) {
-            // async api.get()
-            //GET dados do usuário para preencher os campos
+            getUserData();
         }
     }, [])
 
     const submitCadastre = async (e) => {
         e.preventDefault();
-        await api.post("/users", {
-            email,
-            password,
-            firstName,
-            lastName,
-            phone
-        }).then((result) => {
-            userLogged ? navigate("/home") : navigate("/");
-            console.log(result)
-        }).catch(err => console.error(err))
+        if (userLogged) {
+            await api.put("/users", {
+                email,
+                password,
+                firstName,
+                lastName,
+                phone
+            }, {headers: header}).then((result) => {
+                navigate("/home");
+            }).catch(err => console.error(err))
+        } else {
+            await api.post("/users", {
+                email,
+                password,
+                firstName,
+                lastName,
+                phone
+            }).then((result) => {
+                navigate("/");
+            }).catch(err => console.error(err))
+        }
     }
 
     return (
@@ -45,23 +69,23 @@ const Cadastre = () => {
             <form className="formLogin" onSubmit={submitCadastre}>
                 <div className="divField">
                     <label>Nome</label>
-                    <input type="text" className="input" onChange={(e) => setFirstName(e.target.value)} />
+                    <input type="text" className="input" onChange={(e) => setFirstName(e.target.value)} defaultValue={firstName} />
                 </div>
                 <div className="divField">
                     <label>Sobrenome</label>
-                    <input type="text" className="input" onChange={(e) => setLastName(e.target.value)} />
+                    <input type="text" className="input" onChange={(e) => setLastName(e.target.value)} defaultValue={lastName} />
                 </div>
                 <div className="divField">
                     <label>Telefone (somente números)</label>
-                    <input type="text" className="input" onChange={(e) => setPhone(e.target.value)} />
+                    <input type="text" className="input" onChange={(e) => setPhone(e.target.value)} defaultValue={phone} />
                 </div>
                 <div className="divField">
                     <label>E-mail</label>
-                    <input type="text" className="input" onChange={(e) => setEmail(e.target.value)} />
+                    <input type="text" className="input" onChange={(e) => setEmail(e.target.value)} defaultValue={email} />
                 </div>
                 <div className="divField">
                     <label>Senha</label>
-                    <input type="password" className="input" onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password" className="input" onChange={(e) => setPassword(e.target.value)} defaultValue={password} />
                 </div>
                 <button className="buttonSubmit">Salvar</button>
             </form>

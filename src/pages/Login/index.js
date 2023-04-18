@@ -20,7 +20,6 @@ const Login = () => {
             localStorage.setItem("loggedFirstName", result.data.firstName);
             api.defaults.headers.common['authorization'] = `Bearer ${result.data.token}`;
             navigate("/home");
-            console.log(result)
         }).catch(err => console.error(err))
     }
 
