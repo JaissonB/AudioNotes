@@ -58,7 +58,7 @@ const Header = ({ title, conversations, handleActualConversation }) => {
                                     return (
                                         <div
                                             className="divConversation"
-                                            key={conversation.id}
+                                            key={conversation.conversation_id}
                                         >
                                             <div
                                                 className="divConversationFirst"
@@ -68,7 +68,7 @@ const Header = ({ title, conversations, handleActualConversation }) => {
                                                 }}
                                             >
                                                 <AiOutlineMessage size={20} className="icon" />
-                                                <p>{conversation.name}</p>
+                                                <p>{conversation.conversation_name}</p>
                                             </div>
                                             <AiOutlineSend size={20} className="icon iconSend" onClick={() => console.log("SEND this")} />
                                         </div>

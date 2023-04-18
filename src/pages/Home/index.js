@@ -10,9 +10,10 @@ import api from "../../services/api";
 const Home = () => {
     const navigate = useNavigate();
     const [isRecording, setIsRecording] = useState(false);
-    const [actualConversation, setActualConversation] = useState("New");
+    const [actualConversation, setActualConversation] = useState("");
     const [firstName, _] = useState(localStorage.getItem("loggedFirstName"));
     const location = useLocation();
+    const header = {authorization: `Bearer ${localStorage.getItem("TOKEN")}`}
     let msgId = location.state?.id || "";
     const [messages, setMessages] = useState([
         // {
@@ -29,24 +30,24 @@ const Home = () => {
         // }
     ])
     const [conversations, setConversations] = useState([
-        {
-            id: 1,
-            messagesId: [1],
-            name: "Conversa Title",
-            category: "Lorem"
-        },
-        {
-            id: 2,
-            messagesId: [2],
-            name: "Conversa Title",
-            category: "Lorem"
-        },
-        {
-            id: 3,
-            messagesId: [3],
-            name: "Conversa Title",
-            category: "Lorem"
-        }
+        // {
+        //     id: 1,
+        //     messagesId: [1],
+        //     name: "Conversa Title",
+        //     category: "Lorem"
+        // },
+        // {
+        //     id: 2,
+        //     messagesId: [2],
+        //     name: "Conversa Title",
+        //     category: "Lorem"
+        // },
+        // {
+        //     id: 3,
+        //     messagesId: [3],
+        //     name: "Conversa Title",
+        //     category: "Lorem"
+        // }
     ])
 
     const commands = [
@@ -82,14 +83,14 @@ const Home = () => {
         },
     ]
 
+    const getChats = async () => {
+        await api.get("/conversations", {headers: header})
+        .then(result => setConversations(result?.data))
+        .catch(error => console.error(error));
+    }
+
     useEffect(() => {
         if (localStorage.getItem("TOKEN")) {
-            let header = {'authorization': `Bearer ${localStorage.getItem("TOKEN")}`}
-            async function getChats() {
-                await api.get("/conversations", {headers: header})
-                .then(result => console.log(result))
-                .catch(error => console.error(error));
-            }
             getChats();
         } else {
             navigate("/");
@@ -104,16 +105,41 @@ const Home = () => {
 
     if(!browserSupportsSpeechRecognition) return (<span>Seu navegador não é compativel com SpeechRecognition.</span>)
 
-    const whenStopListening = () => {
+    const getActualConversation = async (data) => {
+        console.log("DATA", data)
+        if (data.conversation_id) {
+            await api.get(`/conversations/${data.conversation_id}`, { headers: header })
+            .then(result => {
+                console.log(result);
+                setActualConversation(result.data);
+                setMessages(result.data?.messages);
+                getChats();
+            })
+        } else {
+            setActualConversation([]);
+            setMessages([]);
+        }
+    }
+
+    const whenStopListening = async () => {
         var newMessages = messages;
         var tempId = messages.length + 1;
         SpeechRecognition.stopListening();
-        newMessages.push({
-            id: tempId,
-            message: transcript,
-            category: "Lorem"
+        // newMessages.push({
+        //     id: tempId,
+        //     message: transcript,
+        //     category: "Lorem"
+        // })
+        // setMessages(newMessages);
+        await api.post("/messages", {
+            content: transcript,
+            conversation_id: actualConversation.conversation_id || null
+        }, { headers: header })
+        .then(result => {
+            console.log(result.data);
+            getActualConversation(result.data);
         })
-        setMessages(newMessages);
+        .catch(error => console.error(error))
         setIsRecording(!isRecording);
         resetTranscript();
     }
@@ -129,6 +155,8 @@ const Home = () => {
     }
 
     const updateActualConversation = conversation => {
+        console.log("Update actual conversation:", conversation)
+        getActualConversation(conversation);
         setActualConversation(conversation);
     }
 
@@ -148,14 +176,14 @@ const Home = () => {
 
     return (
         <>
-            <Header title={actualConversation.name || "Nova ideia"} conversations={conversations} handleActualConversation={updateActualConversation} />
+            <Header title={actualConversation.conversation_name || "Nova ideia"} conversations={conversations} handleActualConversation={updateActualConversation} />
             <div className="main">
                 {
                     messages?.length || isRecording ?
                     messages.map((message) => {
                         return (
-                            <div className="divMessage" key={message.id}>
-                                <p className="pMessage">{message.message}</p>
+                            <div className="divMessage" key={message.messageDate + message.messageTime}>
+                                <p className="pMessage">{message.content}</p>
                             </div>
                         )
                     })

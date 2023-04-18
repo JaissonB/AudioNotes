@@ -45,7 +45,7 @@ const Cadastre = () => {
             <form className="formLogin" onSubmit={submitCadastre}>
                 <div className="divField">
                     <label>Nome</label>
-                    <input type="text" className="input" onChange={(e) => setFirstName(e.target.value)} value={email} />
+                    <input type="text" className="input" onChange={(e) => setFirstName(e.target.value)} />
                 </div>
                 <div className="divField">
                     <label>Sobrenome</label>
