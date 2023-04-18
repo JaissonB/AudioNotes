@@ -6,8 +6,19 @@ import api from "../../services/api";
 
 const Header = ({ title, conversations, handleActualConversation }) => {
     const [showMenu, setShowMenu] = useState(false);
+    const [userPhone, setUserPhone] = useState("");
     const header = {authorization: `Bearer ${localStorage.getItem("TOKEN")}`}
     const navigate = useNavigate();
+
+    useEffect(() => {
+        getUserData();
+    }, [])
+
+    const getUserData = async () => {
+        await api.get('/users', {headers: header})
+        .then(response => setUserPhone(response.data.phone))
+        .catch(error => console.error(error));
+    }
 
     const logout = () => {
         localStorage.removeItem("TOKEN");
@@ -28,7 +39,7 @@ const Header = ({ title, conversations, handleActualConversation }) => {
     const sendMessage = async (message) => {
         await api.post("https://api.z-api.io/instances/3BBFCD789DFF30614E687296C04D749E/token/6093744DB0A96F2A1E7E2309/send-messages",
             {
-                phone: "5554992026787",
+                phone: "55" + userPhone,
                 // phone: "5554996711882",
                 message: message.content
             }

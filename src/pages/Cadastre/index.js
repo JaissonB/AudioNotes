@@ -81,11 +81,11 @@ const Cadastre = () => {
                 </div>
                 <div className="divField">
                     <label>E-mail</label>
-                    <input type="text" className="input" onChange={(e) => setEmail(e.target.value)} defaultValue={email} />
+                    <input type="text" className="input" onChange={(e) => setEmail(e.target.value)} defaultValue={email} autoComplete="off" />
                 </div>
                 <div className="divField">
                     <label>Senha</label>
-                    <input type="password" className="input" onChange={(e) => setPassword(e.target.value)} defaultValue={password} />
+                    <input type="password" className="input" onChange={(e) => setPassword(e.target.value)} defaultValue={password} autoComplete="off" />
                 </div>
                 <button className="buttonSubmit">Salvar</button>
             </form>

@@ -1,5 +1,6 @@
 .container {
     width: 100vw;
+    max-width: 585px;
     height: 100vh;
     background-color: #343541;
     display: flex;
@@ -21,7 +22,7 @@
 }
 
 .divField {
-    width: 70vw;
+    width: 70%;
     display: flex;
     margin-bottom: 20px;
     flex-direction: column;
@@ -40,7 +41,7 @@
 }
 
 .buttonSubmit {
-    width: 70vw;
+    width: 70%;
     height: 50px;
     border-radius: 15px;
     border-width: 0;

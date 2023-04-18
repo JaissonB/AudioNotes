@@ -50,6 +50,12 @@ const Home = () => {
                 whenStopListening();
             },
         },
+        {
+            command: 'Gertrudes para',
+            callback: () => {
+                whenStopListening();
+            },
+        },
     ]
 
     const getChats = async () => {
