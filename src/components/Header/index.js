@@ -29,9 +29,10 @@ const Header = ({ title, conversations, handleActualConversation }) => {
         await api.post("https://api.z-api.io/instances/3BBFCD789DFF30614E687296C04D749E/token/6093744DB0A96F2A1E7E2309/send-messages",
             {
                 phone: "5554992026787",
+                // phone: "5554996711882",
                 message: message.content
             }
-        ).then(result => result.json())
+        ).then(result => {})
         .catch(error => console.error(error))
     }
 
