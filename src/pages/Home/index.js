@@ -90,8 +90,10 @@ const Home = () => {
 
     const whenStopListening = async () => {
         SpeechRecognition.stopListening();
+        let content = transcript;
+        content = content[0].toUpperCase() + content.substring(1);
         await api.post("/messages", {
-            content: transcript,
+            content: content,
             conversation_id: actualConversation.conversation_id || null
         }, { headers: header })
         .then(result => {
@@ -140,7 +142,7 @@ const Home = () => {
                     messages.map((message) => {
                         return (
                             <div>
-                                <div className="divMessage" key={message.messageDate + message.messageTime}>
+                                <div className="divMessage" key={message.id}>
                                     <p className="pMessage">{message.content}</p>
                                     <p className="pTime">{`${message.messageDate} ${message.messageTime}`}</p>
                                 </div>

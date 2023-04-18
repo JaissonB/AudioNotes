@@ -71,6 +71,8 @@
 
 .containerConversations {
     width: 100%;
+    height: calc(100% - 210px);
+    overflow: auto;
 }
 
 .divConversation {
