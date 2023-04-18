@@ -103,7 +103,7 @@ const Home = () => {
         browserSupportsSpeechRecognition
     } = useSpeechRecognition({commands})
 
-    if(!browserSupportsSpeechRecognition) return (<span>Seu navegador não é compativel com SpeechRecognition.</span>)
+    if (!browserSupportsSpeechRecognition) return (<span>Seu navegador não é compativel com SpeechRecognition.</span>)
 
     const getActualConversation = async (data) => {
         console.log("DATA", data)

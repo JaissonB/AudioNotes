@@ -6,6 +6,7 @@ import api from "../../services/api";
 
 const Header = ({ title, conversations, handleActualConversation }) => {
     const [showMenu, setShowMenu] = useState(false);
+    const header = {authorization: `Bearer ${localStorage.getItem("TOKEN")}`}
     const navigate = useNavigate();
 
     useEffect(()=>{
@@ -19,11 +20,23 @@ const Header = ({ title, conversations, handleActualConversation }) => {
         navigate("/");
     }
     //cell do Igor 5554996711882
-    const sendMessage = async () => {
+
+    const sendConversationToWhatsapp = async (data) => {
+        await api.get(`/conversations/${data.conversation_id}`, { headers: header })
+        .then(result => {
+            console.log(result.data);
+            
+            result.data.messages.forEach(message => {
+                sendMessage(message);
+            });
+        })
+    }
+
+    const sendMessage = async (message) => {
         await api.post("https://api.z-api.io/instances/3BBFCD789DFF30614E687296C04D749E/token/6093744DB0A96F2A1E7E2309/send-messages",
             {
                 phone: "5554992026787",
-                message: "Isso é um teste seu manézão, temos 2 dias grátis, depois, lembrar de desativar, obrigado! Por favor avise o Jaisson se funcionar."
+                message: message.content
             }
         ).then(result => console.log(result))
         .catch(error => console.error(error))
@@ -70,7 +83,7 @@ const Header = ({ title, conversations, handleActualConversation }) => {
                                                 <AiOutlineMessage size={20} className="icon" />
                                                 <p>{conversation.conversation_name}</p>
                                             </div>
-                                            <AiOutlineSend size={20} className="icon iconSend" onClick={() => console.log("SEND this")} />
+                                            <AiOutlineSend size={20} className="icon iconSend" onClick={() => sendConversationToWhatsapp(conversation)} />
                                         </div>
                                     )
                                 })
