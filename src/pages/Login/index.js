@@ -2,22 +2,23 @@ import React, { useState } from "react";
 import logo from "../../assets/logo.png";
 import api from "../../services/api";
 import "./styles.css";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     const submitLogin = async (e) => {
-        console.log(email)
         e.preventDefault();
-        const headers = {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
-        }
         await api.post("/authenticate", {
             email: email,
             password: password
-        }, {headers}).then((result) => {
+        }).then((result) => {
+            sessionStorage.setItem("TOKEN", result.data.token);
+            sessionStorage.setItem("loggedUserId", result.data.userId);
+            sessionStorage.setItem("loggedFirstName", result.data.firstName);
+            navigate("/home");
             console.log(result)
         }).catch(err => console.error(err))
     }
@@ -34,7 +35,16 @@ const Login = () => {
                     <label>Senha</label>
                     <input type="password" className="input" onChange={(e) => setPassword(e.target.value)} />
                 </div>
-                <button className="buttonSubmit">Login</button>
+                <button className="buttonSubmit">Entrar</button>
+                <button 
+                    className="buttonCadastre"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        navigate("/cadastre");
+                    }}
+                >
+                    Criar conta
+                </button>
             </form>
         </div>
     )

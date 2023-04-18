@@ -76,6 +76,27 @@
     padding-left: 64px;
 }
 
-.chatIcon {
+.icon {
     margin-right: 16px;
+}
+
+.menuFooter {
+    display: flex;
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-top: 1px solid white;
+}
+
+.optionMenuFooter {
+    display: flex;
+    align-items: center;
+}
+
+.iconSend {
+    transform: rotate(-45deg);
 }

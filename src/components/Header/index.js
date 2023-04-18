@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlineMenu, AiOutlinePlus, AiOutlineClose, AiOutlineMessage } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
+import { AiOutlineMenu, AiOutlinePlus, AiOutlineClose, AiOutlineMessage, AiOutlineUser, AiOutlineSend, AiOutlineLogout } from "react-icons/ai";
 import "./styles.css";
 
 const Header = ({ title, conversations, handleActualConversation }) => {
     const [showMenu, setShowMenu] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(()=>{
         // console.log(title)
@@ -30,7 +32,7 @@ const Header = ({ title, conversations, handleActualConversation }) => {
                             }}
                         >
                             <AiOutlinePlus className="menuPlusNote" />
-                            <p>New note</p>
+                            <p>Nova ideia</p>
                         </button>
                         {
                             conversations?.map((conversation) => {
@@ -43,12 +45,39 @@ const Header = ({ title, conversations, handleActualConversation }) => {
                                             setShowMenu(false);
                                         }}
                                     >
-                                        <AiOutlineMessage size={20} className="chatIcon" />
+                                        <AiOutlineMessage size={20} className="icon" />
                                         <p>{conversation.name}</p>
                                     </div>
                                 )
                             })
                         }
+                        <div className="menuFooter">
+                            <div
+                                className="optionMenuFooter"
+                                onClick={() => navigate("/cadastre")}
+                            >
+                                <AiOutlineUser size={20} className="icon" />
+                                <p>Account</p>
+                            </div>
+                            <div
+                                className="optionMenuFooter"
+                                onClick={() => {
+                                    setShowMenu(false);
+                                }}
+                            >
+                                <AiOutlineSend size={20} className="icon iconSend" />
+                                <p>Send on Whatsapp</p>
+                            </div>
+                            <div
+                                className="optionMenuFooter"
+                                onClick={() => {
+                                    setShowMenu(false);
+                                }}
+                            >
+                                <AiOutlineLogout size={20} className="icon" />
+                                <p>Logout</p>
+                            </div>
+                        </div>
                     </div>
                 </>
             }

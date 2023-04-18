@@ -120,7 +120,7 @@ const Home = () => {
 
     return (
         <>
-            <Header title={actualConversation.name || "New note"} conversations={conversations} handleActualConversation={updateActualConversation} />
+            <Header title={actualConversation.name || "Nova ideia"} conversations={conversations} handleActualConversation={updateActualConversation} />
             <div className="main">
                 {
                     messages.map((message) => {
