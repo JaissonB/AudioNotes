@@ -147,8 +147,8 @@ const Home = () => {
                     messages?.length || isRecording ?
                     messages.map((message) => {
                         return (
-                            <div>
-                                <div className="divMessage" key={message.id}>
+                            <div key={message.id}>
+                                <div className="divMessage">
                                     <p className="pMessage">{message.content}</p>
                                     <p className="pTime">{`${message.messageDate} ${message.messageTime}`}</p>
                                 </div>
